@@ -1,0 +1,380 @@
+"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+"%%%%%%%%%%%%%%%%%%%%%%%%ALEX HAHN'S VIMRC%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+"Alex Hahn's vimrc ... turn up ... try to credit me in a preceeding comment
+"with anything that seems non-trivial <333333333333333333
+
+
+"A great bit of useful info on good Vim practices, get on that next level
+"kinda stuff but also very useful http://www.oualline.com/vim/10/top_10.html
+"Will post more on my github () as I go/ make more legit
+
+"TODO:
+"       -Comment all uncommented command/ lines
+"       -Unit testing
+"       -See if order matters for each command (put in front then back)
+"       -embed script "setcolors.vim" inside of this .vimrc? that way <F8>
+"       always toggles between all avaible color schemes? ... this might take
+"       an hour or so
+
+"       TOC (Table of Contents): Sections
+"-----------------------------------------------------------------------------
+"   0) TODO's
+"   1) The No Brainers (ABSOLUTELY MUST HAVE, SO BASED)
+"   2) Color Schemes
+"   3) Tabs And Spaces
+"   4) Search/Find And Replace
+"   5) Visual Aids and some Formatting
+"   6) Getting Pro At Vim (probably aliases, tips, definitely good to look at
+"   and ponder)
+"-----------------------------------------------------------------------------
+
+
+" 0) TODO's
+"-----------------------------------------------------------------------------
+"TODO:
+"       -Comment all uncommented command/ lines
+"       -Unit testing
+"       -See if order matters for each command (put in front then back)
+"       -embed script "setcolors.vim" inside of this .vimrc? that way <F8>
+"        always toggles between all available color schemes? ... this might
+"        take an hour or so
+"       -Make a "Profiles" folder on local machine and point symbolic files of
+"       profiles (.vimrc, .bashrc, etc) and put on github
+
+
+
+" 1) THE NO BRAINERS (MUST HAVES!)
+"-----------------------------------------------------------------------------
+"Usually keep this as first command in your .vimrc file... instead of that
+"old school vi feel you get the Vi IMproved (VIm) features/functionality.
+set nocompatible
+
+"Turn on line numbers... a must have
+set number
+
+"Syntax highlighting, clutch
+syntax on
+
+"Same as syntax enable?
+
+"Sometimes (for more advanced users) the ability to use plugins is
+"extremely helpful and allows you to bootstrap to your vim profile
+filetype plugin on
+
+" 700 lines history in the vimrc (can see in some meta files)
+set history=700
+
+" Use english for spellchecking, use  spellcheck by default
+if version >= 700
+    set spl=en spell
+endif
+
+"Scroll kicks in with this many lines as a buffer (both up and down scrolling)
+set so=10
+
+"2) Colorschemes
+"-----------------------------------------------------------------------------
+"Uncomment one of the color schemes. Make sure that you have the .vim/colors/
+"library and corresponding schemes installed
+
+"=======================
+" Custom Colorschemes
+"=======================
+colorscheme gruvbox
+"colorscheme badwolf
+
+"=======================
+" Built in Colorschemes
+"=======================
+"colorscheme blue
+"colorscheme koehler
+"colorscheme Malokai
+
+
+" Make sure colorscheme/ background loads in as dark mode if option exists
+set bg=dark
+
+"   3) Tabs And Spaces
+"-----------------------------------------------------------------------------
+""Instead of annoying tab characters (jumps a bunch of spaces, hard to control)
+"we equivalently insert a certain number of spaces characters (spaces)
+"which gives us more maneuverability
+set expandtab
+
+"This controls how many spaces hitting tab moves over (remember tabstop now
+"makes these actual spaces rather than jumps!)
+set tabstop=4
+
+"Uses tabs better, ie shiftwith instead of tab stop at the start of lines (then
+"switches), I think this also might change and auto format differently for
+"different file types (extensions) which would be pretty cool but idk for sure
+set smarttab
+
+"Set the number of space characters inserted for indentation
+set shiftwidth=4
+
+"This simply keeps indentation from the previous line, very useful for keeping
+"the syntax of code blocks consistent
+set autoindent
+
+"Usually pretty good but sometimes certain key words cause unintended indents
+"(not too crazy inconvenient though), supports smart indenting of common PL's.
+"New line also triggers indent which can be convenient or annoying
+set smartindent
+
+set formatoptions=tcrql "Auto formatting and  wrapping lines
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+
+" Turn off highlights in search when done with <Control> - L
+nnoremap <C-L> :nohl<CR><C-L>
+
+" Set backspace to work more appropriately
+set backspace=indent,eol,start
+
+"   4) Search, Find, and Replace
+"-----------------------------------------------------------------------------
+"case insensitive search/find/replace (? / stuff). Kind of funny that there's
+"a set noic / set noignorecase option lol... double negatives ftw. Also note
+"that smartcase doesn't really ever hurt this like some people preach; lower
+"case searches are case insensitive by default, only when you include a capital
+"does the case sensitivity kick in as set below by "set smartcase"
+set ignorecase
+
+"Messes with buffers and writing, good idea to have. With this opening a new
+"file when the current buffer has unsaved changes causes files to be hidden
+"instead of closed (and no ‘No write since last change (add ! to override)'
+"error. All unsaved changes can still be accessed by typing :ls and then :b[N],
+"where [N] is the number of a buffer (look online for buffer tutorial stuff)
+set hidden
+
+"same as:
+"set hid
+
+"Only search by case sensitivity IF the search term has at least one capital in
+"it, ie search "turnt" will find "TuRnT" but search "Turnt" won't find "turnt"
+set smartcase
+
+"Uhhhhhh I forget why I put this in, lookes like an aliased grep to search with
+"flags built in? looking at the grep man page, it's filename and return line
+"number... still unclear, TODO will get back to
+set grepprg=grep\ -nH\ $*
+
+"By default, searching starts after you enter the string, with incsearch it
+"searches incrementally with the first character and refines as you go!
+set incsearch
+"
+""Turns on search highlighting, great feature
+set hlsearch
+
+"Visual mode pressing * or # searches for the current selection
+""Pretty useful - credit to Michael Naumann
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
+
+"Map <C-L> (redraw screen) to also turn off search highlighting until the
+""next search I just use the ctrl l config set earlier
+
+
+"   4) Visual Aids and Formatting
+"-----------------------------------------------------------------------------
+
+"A little more of a controversial but potentially helpful command, showmatch
+"causes vim to move the cursor to previos matching bracket ([{}]) for a quick
+"moment and pressing any other key will quickly ignore it so rapid typing is not
+"interupted
+set showmatch
+
+""set the momentary duration of showmatch (in tenths of a second)
+set matchtime=4
+
+"REPEATED FROM MUST HAVE SECTION BUT ALSO FITS HERE: This actually doesn't
+"physically change the background color usually but rather tells vim what it
+"looks like for other uses. Also, I'm not sure of this but if there is a light
+"version also, this picks the dark one (fuck the light ones lol)
+set bg=dark
+
+"highlights the current line the cursor is on. Pretty useful, if you highlight
+"the character (column) too it can become a little too much visually like
+"crosshairs is pretty extravagant and wild
+set cursorline
+
+"Highlight in red if surpass 80 character limit (mainly for coding/style...
+"especially if you're a kernal developer!)
+highlight Overlength ctermbg=red ctermfg=white guibg=#592929
+match Overlength /\%80v.\+/
+
+"Overrides 80 character limit/ whatever textwidth or alias tw is
+"set to so I'm going to leave it off, is useful in some cases doe
+"set lbr
+
+"A pretty neat and useful feature, ruler brings up a status line at the bottom
+"of the vim editor that tells you: the line number, column number, virtual
+"column number, and the relative position of the cursor in the file (As a
+"percentage)
+set ruler
+
+""set how wide lines can be (how many characters) note that the higlighting 80+
+"lines code might be unnecessary with this (edit: still effective)
+set textwidth=79
+
+"Same as Using shortcut tw=__
+"set tw=80
+
+"Very useful if you're using textwidth, automatically gets as close to the limit
+"as possible without going over
+set formatoptions+=t
+
+""set how autoformatting is done: t=textwidth, c=comments, q=allow 'gq' to
+"work, r=(in mail) comment leader after
+"set formatoptions=tcql
+
+""Another more robust over 80 char highlighting command: once again... use when
+"best (uncomment to use):
+""augroup vimrc_autocmds
+"    autocmd BufEnter * highlight OverLength ctermbg=red
+"    "    autocmd BufEnter * match OverLength /\%80v.*/
+"    "augroup END
+
+"Set the command window height to 2 lines (many times you actually have to hit
+"enter to view continue\finish viewing)
+set cmdheight=2
+
+"   5) Getting Pro at Vim
+"-----------------------------------------------------------------------------
+
+"DISABLE USING ARROW KEYS! This will mess you up big time to start but in the
+"long run will make you an absolute pro at coding/vim. The whole point of vim
+"is to ergonomically allocate keyboard space and characters. j and k are up
+"and down and h and l are left and right on the home keys for a reason! Avoid
+"carpal tunnel! It sux, trust me! use smart key bindings and always be looking
+"to improve. Sorry for the suffering in advance this will cause but really keep
+"this in your .vimrc so you get pro!!!
+
+let mapleader = ","
+let g:mapleader = ","
+
+
+"(disable arrows in command mode)
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+
+"(disable arrows in insert mode)
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+"For saving and quitting fix the case sensitivity that often throws a "Not an
+"editor command error"
+command W w
+command Q q
+command Wq wq
+command WQ wq
+
+"AN ABSOLUTE MUST: REBIND JK to the ESCAPE KEY insert mode (
+imap jk <ESC>
+imap JK <ESC>
+
+"Another ABSOLUTELY ESSENTIAL mapping is : to ; hitting shift for the split
+"second you're off it sucks and is often messed up, just keep ; and : is
+"infallible!
+nmap ; :
+
+"Command line tab completion (think about cycling through :colorscheme (tab
+"tab...)
+set wildmenu
+
+"uhhhh
+nmap <leader>w :w!<cr>
+
+"First tab will complete the longest common string and will invoke wildmenu
+"(horizontal and not that obstructive), the next tab will complete the first
+"alternative and will then cycle through the rest
+set wildmode=list:longest:full
+
+"Show the characters in the command as you go
+set showcmd
+
+"Unfortunately h and l don't wrap to after end of line characters... this is
+"extremely annoying, but this solves it!
+set whichwrap+=<,>,h,l,[,]
+
+"Stop certain movements from always going to the first character of the line
+"(instead go to actual non whitespace). Pretty handy and usually what most of
+"the time (if not all) you want. Most other text editors have this
+set nostartofline
+
+"Always display the status line, even if only one window is displayed
+set laststatus=2
+
+"Attempt to determine the type of a file based on its name and possibly
+"contents. Helps auto-indenting for each filetype and for plugins that are
+"filetype specific
+filetype indent plugin on
+
+"Is this the same as having these two commands turned on?:
+"filetype plugin on
+"filetype indent on
+"And this one?
+"filetype on
+
+"Instead of failing a command because of unsaved changes, instead raise a
+"dialogue asking if you wish to save changed files
+set confirm
+
+"Use a visual bell instead of audio (...not actually a huge fan of this one,
+"but I guess with no sound it be helpful, uncomment for it)
+set visualbell
+
+"Quickly time out on keycodes, but never time out on mappings
+set notimeout ttimeout ttimeoutlen=200
+
+"Use <f11> to toggle between 'paste and 'nopaste'. I actually don't use this
+"much but maybe I should...
+set pastetoggle=<F11>
+
+"Map Y to act like D and C, ie to yank until EOL rather than act like yy wich
+"is default (maybe this is useful though?)
+map Y y
+
+"Automatically remove all trailing whitespace before saving (THIS CAN BE
+"DANGEROUS BY ITSELF, SOMETIMES FILES NEED TRAILING WHITESPACE!)
+"autocmd BufWritePre * :%s/\s\+$//e
+
+"so instead let's mess with certain filetypes only!
+autocmd FileType c,ccp,java,php autocmd BufWritePre <buffer> : %s/\s\+$//e
+
+"Remove any trailing whitespace that is in the file
+autocmd Bufread,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+
+"Automatically change the working directory to the location of the file being
+"edited. (sometimes doesn't work for certain files/ plugins, see
+"preceeding comments)... it's clutch doe
+set autochdir
+
+"simulating this for all files we can use:
+"autocmd BufRead,BufNewFile
+
+""Autocmd BufEnter
+"If you want longlines to just be broken at some specified width
+""visually but have no new line characters use this, I don't recommend
+"A)because it is harder to maneuver in vim B) just don't go over 80 char
+""anyways... Could be helpful in comments and other docs doe?
+"set wrap
+
+"When F5 is pressed, a numbered list of file names (buffered) is printed, the
+"users simply hits the number of the buffer he wants to go to and hits enter
+nnoremap <F5> :buffers<CR>:buffer<Space>
+
+"tear off the buffer menu to make an always available list of buffers
+set wildchar=<Tab> wildmenu wildmode=full
+
+"F10 also opens the buffer menu:
+set wildcharm=<C-z>
+nnoremap <F10> :b <C-z>
