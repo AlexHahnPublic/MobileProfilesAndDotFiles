@@ -1,7 +1,7 @@
 # Script to import and run all . (dot) files
 (NOTE bash or terminal compatible)
 
-Ever wish you could simply run a script to customize your (linux or Mac OS) workstation to your predesigned liking? With vim we can just store remotely then pull to any machine we're on and run the .sh script to import /execute! Mobile profiles to your tailored liking
+Ever wish you could simply run a script to customize your (linux or Mac OS) workstation to your predesigned liking? With git we can just store remotely then pull to any machine we're on and run the .sh script to import /execute! Mobile profiles to your tailored liking
 
 
 Files to date are:
