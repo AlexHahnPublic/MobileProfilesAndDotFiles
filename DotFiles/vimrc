@@ -3,18 +3,8 @@
 "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-"Alex Hahn's vimrc ... turn up ... try to credit me in a preceeding comment
-"with anything that seems non-trivial <333333333333333333
-
-
-"A great bit of useful info on good Vim practices, get on that next level
-"kinda stuff but also very useful http://www.oualline.com/vim/10/top_10.html
-"Will post more on my github () as I go/ make more legit
 
 "TODO:
-"       -Comment all uncommented command/ lines
-"       -Unit testing
-"       -See if order matters for each command (put in front then back)
 "       -embed script "setcolors.vim" inside of this .vimrc? that way <F8>
 "       always toggles between all avaible color schemes? ... this might take
 "       an hour or so
@@ -22,7 +12,7 @@
 "       TOC (Table of Contents): Sections
 "-----------------------------------------------------------------------------
 "   0) TODO's
-"   1) The No Brainers (ABSOLUTELY MUST HAVE, SO BASED)
+"   1) The No Brainers
 "   2) Color Schemes
 "   3) Tabs And Spaces
 "   4) Search/Find And Replace
@@ -48,8 +38,6 @@
 
 " 1) THE NO BRAINERS (MUST HAVES!)
 "-----------------------------------------------------------------------------
-"Usually keep this as first command in your .vimrc file... instead of that
-"old school vi feel you get the Vi IMproved (VIm) features/functionality.
 set nocompatible
 
 "Turn on line numbers... a must have
@@ -58,19 +46,63 @@ set number
 "Syntax highlighting, clutch
 syntax on
 
-"Same as syntax enable?
+"Turn on autocomplete for vim (https://github.com/ajh17/VimCompletesMe)
+"autocmd FileType vim let b:vcm_tab_complete = 'vim'
 
-"Sometimes (for more advanced users) the ability to use plugins is
-"extremely helpful and allows you to bootstrap to your vim profile
+" Comment single lines with Ctrl+j dynamic on filetype
+noremap <C-j> :<S-Left>exe "<S-Right>normal! I".b:commentType<CR>
+
+autocmd BufReadPost *.[ch] let b:commentType='//' "C files
+autocmd BufReadPost *.pl let b:commentType='#'    "Perl files
+autocmd BufReadPost *.py let b:commentType='#'    "Perl files
+
+
+"turn on plugin files
 filetype plugin on
+
+filetype plugin indent on
+
+"set up vundle
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+"let Vundle manage Vundle
+Plugin 'gmarik/Vundle.vim'
+
+
+
 
 " 700 lines history in the vimrc (can see in some meta files)
 set history=700
+
+" Turn on pathogen for easy install and runtime of plugins
+execute pathogen#infect()
+
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
+
 
 " Use english for spellchecking, use  spellcheck by default
 if version >= 700
     set spl=en spell
 endif
+
+"Basic character pair completion (Autoclose parens/brackets/braces, etc)
+"http://vim.wikia.com/wiki/Automatically_append_closing_characters
+inoremap {      {}<Left>
+inoremap {<CR>  {<CR>}<Esc>O
+inoremap {{     {
+inoremap {}     {}
+inoremap        (  ()<Left>
+
+inoremap <expr> )  strpart(getline('.'), col('.')-1, 1) == ")" ? "\<Right>" : ")"
+inoremap <expr> }  strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
+"'inoremap <expr> ' strpart(getline('.'), col('.')-1, 1) == "\'" ? "\<Right>" : "\'\'\<Left>"
 
 "Scroll kicks in with this many lines as a buffer (both up and down scrolling)
 set so=10
@@ -106,7 +138,7 @@ set expandtab
 
 "This controls how many spaces hitting tab moves over (remember tabstop now
 "makes these actual spaces rather than jumps!)
-set tabstop=4
+set tabstop=2
 
 "Uses tabs better, ie shiftwith instead of tab stop at the start of lines (then
 "switches), I think this also might change and auto format differently for
@@ -114,7 +146,23 @@ set tabstop=4
 set smarttab
 
 "Set the number of space characters inserted for indentation
-set shiftwidth=4
+set shiftwidth=2
+
+"Proper PEP 8 (python) indentation
+"au BufNewFile,BufRead *.py
+    "\ set tabstop=4
+    "\ set softtabstop=4
+    "\ set shiftwidth=4
+    "\ set textwidth=79
+    "\ set expandtab
+    "\ set autoindent
+    "\ set fileformat=unix
+
+"For fullstack development
+"au BufNewFile,BufRead *.js, *.html, *.css
+    "\ set tabstop=2
+    "\ set softtabstop=2
+    "\ set shiftwidth=2
 
 "This simply keeps indentation from the previous line, very useful for keeping
 "the syntax of code blocks consistent
@@ -158,16 +206,14 @@ set hidden
 "it, ie search "turnt" will find "TuRnT" but search "Turnt" won't find "turnt"
 set smartcase
 
-"Uhhhhhh I forget why I put this in, lookes like an aliased grep to search with
-"flags built in? looking at the grep man page, it's filename and return line
-"number... still unclear, TODO will get back to
+" A more informative grep
 set grepprg=grep\ -nH\ $*
 
 "By default, searching starts after you enter the string, with incsearch it
 "searches incrementally with the first character and refines as you go!
 set incsearch
-"
-""Turns on search highlighting, great feature
+
+"Turns on search highlighting, great feature
 set hlsearch
 
 "Visual mode pressing * or # searches for the current selection
@@ -191,15 +237,9 @@ set showmatch
 ""set the momentary duration of showmatch (in tenths of a second)
 set matchtime=4
 
-"REPEATED FROM MUST HAVE SECTION BUT ALSO FITS HERE: This actually doesn't
-"physically change the background color usually but rather tells vim what it
-"looks like for other uses. Also, I'm not sure of this but if there is a light
-"version also, this picks the dark one (fuck the light ones lol)
 set bg=dark
 
-"highlights the current line the cursor is on. Pretty useful, if you highlight
-"the character (column) too it can become a little too much visually like
-"crosshairs is pretty extravagant and wild
+"highlights the current line the cursor is on
 set cursorline
 
 "Highlight in red if surpass 80 character limit (mainly for coding/style...
@@ -207,19 +247,12 @@ set cursorline
 highlight Overlength ctermbg=red ctermfg=white guibg=#592929
 match Overlength /\%80v.\+/
 
-"Overrides 80 character limit/ whatever textwidth or alias tw is
-"set to so I'm going to leave it off, is useful in some cases doe
-"set lbr
-
-"A pretty neat and useful feature, ruler brings up a status line at the bottom
-"of the vim editor that tells you: the line number, column number, virtual
-"column number, and the relative position of the cursor in the file (As a
-"percentage)
+"Display line and character location
 set ruler
 
 ""set how wide lines can be (how many characters) note that the higlighting 80+
 "lines code might be unnecessary with this (edit: still effective)
-set textwidth=79
+set textwidth=80
 
 "Same as Using shortcut tw=__
 "set tw=80
@@ -246,14 +279,6 @@ set cmdheight=2
 "   5) Getting Pro at Vim
 "-----------------------------------------------------------------------------
 
-"DISABLE USING ARROW KEYS! This will mess you up big time to start but in the
-"long run will make you an absolute pro at coding/vim. The whole point of vim
-"is to ergonomically allocate keyboard space and characters. j and k are up
-"and down and h and l are left and right on the home keys for a reason! Avoid
-"carpal tunnel! It sux, trust me! use smart key bindings and always be looking
-"to improve. Sorry for the suffering in advance this will cause but really keep
-"this in your .vimrc so you get pro!!!
-
 let mapleader = ","
 let g:mapleader = ","
 
@@ -277,17 +302,23 @@ command Q q
 command Wq wq
 command WQ wq
 
-"AN ABSOLUTE MUST: REBIND JK to the ESCAPE KEY insert mode (
+"make jk escape insert mode (way better than ESC)
 imap jk <ESC>
 imap JK <ESC>
+imap Jk <ESC>
+imap jK <ESC>
 
-"Another ABSOLUTELY ESSENTIAL mapping is : to ; hitting shift for the split
-"second you're off it sucks and is often messed up, just keep ; and : is
-"infallible!
+"sometimes I hit the wrong colon vs semi colon... but I always want cmd mode
 nmap ; :
 
-"Command line tab completion (think about cycling through :colorscheme (tab
-"tab...)
+"split navigations ctrl j moves to split below, ctrl l move to split to the
+"right, etc)
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+"Command line tab completion
 set wildmenu
 
 "uhhhh
@@ -301,14 +332,21 @@ set wildmode=list:longest:full
 "Show the characters in the command as you go
 set showcmd
 
-"Unfortunately h and l don't wrap to after end of line characters... this is
-"extremely annoying, but this solves it!
+"It sucks when h/l don't go to the next line if there's a line break... this
+"fixes that
 set whichwrap+=<,>,h,l,[,]
 
 "Stop certain movements from always going to the first character of the line
 "(instead go to actual non whitespace). Pretty handy and usually what most of
-"the time (if not all) you want. Most other text editors have this
+"the time (if not all the time). Most other text editors have this
 set nostartofline
+
+"Identify and color bad whitespace in python files
+"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+"Ensure UTF-8 encoding
+set encoding=utf-8
+
 
 "Always display the status line, even if only one window is displayed
 set laststatus=2
@@ -316,7 +354,7 @@ set laststatus=2
 "Attempt to determine the type of a file based on its name and possibly
 "contents. Helps auto-indenting for each filetype and for plugins that are
 "filetype specific
-filetype indent plugin on
+"filetype indent plugin on
 
 "Is this the same as having these two commands turned on?:
 "filetype plugin on
@@ -343,30 +381,23 @@ set pastetoggle=<F11>
 "is default (maybe this is useful though?)
 map Y y
 
+"Commenting this out, I don't actually use
 "Automatically remove all trailing whitespace before saving (THIS CAN BE
 "DANGEROUS BY ITSELF, SOMETIMES FILES NEED TRAILING WHITESPACE!)
 "autocmd BufWritePre * :%s/\s\+$//e
 
-"so instead let's mess with certain filetypes only!
+"so instead let's just do that with certain filetypes only!
 autocmd FileType c,ccp,java,php autocmd BufWritePre <buffer> : %s/\s\+$//e
 
 "Remove any trailing whitespace that is in the file
-autocmd Bufread,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+"autocmd Bufread,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
 
 "Automatically change the working directory to the location of the file being
 "edited. (sometimes doesn't work for certain files/ plugins, see
-"preceeding comments)... it's clutch doe
+"preceeding comments)
 set autochdir
 
-"simulating this for all files we can use:
-"autocmd BufRead,BufNewFile
 
-""Autocmd BufEnter
-"If you want longlines to just be broken at some specified width
-""visually but have no new line characters use this, I don't recommend
-"A)because it is harder to maneuver in vim B) just don't go over 80 char
-""anyways... Could be helpful in comments and other docs doe?
-"set wrap
 
 "When F5 is pressed, a numbered list of file names (buffered) is printed, the
 "users simply hits the number of the buffer he wants to go to and hits enter
@@ -378,3 +409,159 @@ set wildchar=<Tab> wildmenu wildmode=full
 "F10 also opens the buffer menu:
 set wildcharm=<C-z>
 nnoremap <F10> :b <C-z>
+
+" Additional python indentation PEP 8 plugin
+"Plugin 'vim-scripts/indentpython.vim'
+
+" Enable code folding
+set foldmethod=indent
+set foldlevel=99
+
+"Enable folding with the space bar
+nnoremap <space> za
+
+"Better folding plugin
+Plugin 'tmhedberg/SimpylFold'
+
+
+"Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+"Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+
+"see the docstring for folded code
+let g:SimpylFold_docstring_preview=1
+
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
+"Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+"Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+"End Plug section
+call plug#end()
+
+
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()
+filetype plugin indent on
+
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+" Better display for messages
+set cmdheight=2
+
+" Smaller updatetime for CursorHold & CursorHoldI
+"set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+"set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> for trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` for navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+"autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+vmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+vmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Use `:Format` for format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` for fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+
+" Add diagnostic info for https://github.com/itchyny/lightline.vim
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'cocstatus': 'coc#status'
+      \ },
+      \ }
+
+
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
