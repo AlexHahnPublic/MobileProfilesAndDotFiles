@@ -1,7 +1,14 @@
 # Script to import and run all . (dot) files
 (NOTE bash or terminal compatible)
 
-Ever wish you could simply run a script to customize your (linux or Mac OS) workstation to your predesigned liking? Fundamentally you just need to store your various profiles and workplace customizations remotely then run a .sh script to install and read them in. With git we can do just that, store remotely then pull to any machine we're on and run the .sh script to import /execute! Mobile profiles to your tailored liking
+Tracking for various config/dot files 
+
+**Basic steps to create:**
+- initialize git tracked directory (I also set this as .dir just to avoid clutter and keep in ~/)
+- copy or move files you wish to track into that directory
+- remove those files from ~/ (probably a good idea to make a backup)
+- create a symlink file in those locations to the tracked files
+- bonus in .bashrc (or an equivalent) create a command that shortcuts to git commands in that tracked dir. this is nice so that if you're in ~/ (home) you can just do > dotFiles stats or > dotFiles commit -a or > dotFiles pull to easily manage the hidden git dirs actual files
 
 
 Files to date are:
